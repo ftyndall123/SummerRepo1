@@ -1,0 +1,119 @@
+---
+title: 'Data 413: Classwork/Lab 2'
+author: "Frankie Tyndall"
+date: '2022-06-30'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+```
+
+##  Atomic Vector with Different Animals (characters)
+
+```{r cars}
+V <- c("Bears", "Lions", "Dolphins", "Eagles", "Bengals")
+typeof(V)
+```
+
+## Why is the vector shown above an atomic vector? (Explain using two or three sentences)
+
+The vector shown above is an atomic vector because all the objects within
+the vector are the same object type. An atomic vector is homogeneous, all the objects in the atomic vector is of the type "character" so it would be an atomic vector, not a list.  
+
+## Use and show R code that will extract "Dolphins" from the vector shown above.
+
+```{r}
+V[3]
+```
+## Use and show Rcode that will extract "Bears" , "Dolphins" and "Bengals" from the vector shown above.
+
+```{r}
+V[c(1, 3, 5)]
+```
+## Use and show two Rcoding methods that will show all objects of the vector given above except "Bears".
+
+```{r}
+V[-1]
+V[c(2:5)]
+
+```
+## List 1
+
+```{r}
+K <- list(x = 3:7, "never", 43, y = list(10,20,30))
+K
+
+```
+
+## Why is the vector given above called a list? (Explain in two or three sentences) If the vector is a list, identify the type of each object inthe list.
+```{r}
+str(K)
+
+```
+The vector given above is a list because all the objects above in the vector are
+not the same. This vector is not homogeneous because it contains integers,
+character string, and a list of numbers within the list K so it would be 
+a list, not an atomic vector.
+
+#Use and show R code that will give the length of the vector shown above.
+
+```{r}
+length(K)
+
+```
+# Use and show R code that will output the fourth object in the vector shown above.
+
+```{r}
+K[[4]]
+
+```
+
+# Use and show R code that will show all objects in the vector (list) given above.
+
+```{r}
+str(K)
+K
+
+```
+
+## Copy paste and run the tribble given below.
+
+```{r}
+tribble( ~x,    ~y,    ~w,    ~z,
+              210,   300,   220,   180,
+              102,   100,   119,   187,
+              176,   175,   188,   173,
+              87,    95,   91,     94,
+              202,   210,  234,    218,
+              110,   122,  131,    128,
+) -> dt
+dt
+```
+
+## Use and show a map function to find the mean of each column of the dt data table
+
+```{r}
+map_dbl(dt, mean)
+
+```
+## Use and show a map function to find the standard deviation of each column of the dt data table.
+
+```{r}
+map_dbl(dt, sd)
+
+```
+## Use and show a map function that will calculate the square root of each value of each column of the data table dt.
+
+```{r}
+dt %>%
+  map(~. ^(0.5))
+```
+## Use R code to find the mean, max, 1st Quartile, 2nd Quartile, Median, and Mean for each column of the dt data table. (Hint: You do not have to use a map function)
+
+```{r}
+summary(dt)
+
+```

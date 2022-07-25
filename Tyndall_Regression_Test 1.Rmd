@@ -1,0 +1,241 @@
+---
+title: 'Stat 415 Regression: Test 1'
+author: "Frankie Tyndall"
+date: '2022-07-14'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
+library(dplyr)
+library(MASS)
+```
+
+## Part 1: Dataset
+
+```{r}
+x_y_data <- tribble(~X,  ~Y,
+         221  ,                 33,
+         400  ,                 42,
+         300  ,                 37,
+         400  ,                 53,
+         200  ,                 22,
+         260  ,                 37,
+         300  ,                 40,
+         375  ,                 42,
+         210  ,                 25,
+         400  ,                 52,
+         200  ,                 30,
+         344  ,                 42,
+  ) 
+
+x_y_data
+```
+
+## 1a: Use and show R code to produce a scatter plot for the bivariate data given above. Indicate if the scatter plot is showing a definitive positive or negative trend for the data.
+
+```{r}
+qplot(x = X, y = Y , data = x_y_data, geom = "point")
+
+```
+The scatter plot is showing a strong positive trend/relationship between the X and Y variables.
+
+## 1b: Use and show R code to produce a linear model for the bivariate data shown above. Interpret the slope of your model.
+
+
+```{r}
+lm(x_y_data$Y ~ x_y_data$X)
+
+```
+slope = 0.1059 
+y intercept = 6.0631
+
+y(hat) = 6.0631 + 0.1059x
+
+The slope indicates that for every increase of 1 in X, the number of Y
+increases by 0.01059 Xs, on average
+
+## Use and show R  code to determine how much of the variation in Y is explained by your model.
+
+
+```{r}
+summary(lm(x_y_data$Y ~ x_y_data$X))
+
+```
+the R-squared value is 0.8332. This means that 83.32% of the variation in Y is
+explained by the regression model with X
+
+
+## Find a 95% confidence interval for the slope of your model.
+
+```{r}
+slope_conf <- lm(x_y_data$Y ~ x_y_data$X)
+
+confint(slope_conf, '(Intercept)', level=0.95)
+confint(slope_conf, 'x_y_data$X', level=0.95)
+
+# the code from class was not working, so I found the answer this way 
+
+```
+We are 95% confident that the true population slope falls between 
+0.07250468 and 0.1392641
+
+## Using the Bonferroni method illustrated in class, find simultaneous  confidence intervals for the intercept and the slope of your model. 90%
+## confidence interval
+
+```{r}
+joint_conf <- summary(lm(x_y_data$Y ~ x_y_data$X))
+joint_conf
+```
+b1 = 0.10588
+standard error of b1 = 0.01498
+
+b0 = 6.06311
+standard error of b1 = 4.65678 
+
+Interval for B1 = 0.10588 +/- 2.22814(0.01498) =  0.0725 <= B1 <= 0.13925
+Interval for Bo = 6.06311 +/- 2.22814(4.65678 ) = -4.31 <= B0 <= 16.439
+
+## Find the specific residual for the data point (400,42). Does the residual indicate that the observed value of 400 is above or below average. Explain why or why not.
+
+```{r}
+observed_Y_42 <- x_y_data %>% 
+  filter(X == 400 & Y == 42)
+
+observed_Y_42
+
+```
+y(hat) = 6.0631 + 0.1059x
+y(hat) = 6.0631 + 0.1059(400)
+y(hat) = expected value = 48.4231
+
+residual = observed - expected
+residual = 42 - 48.4231 = -6.4231
+
+The residual of -6.4231 indicates that the observed value of 400 which is 42
+is below average. The residual is negative which indicates that the observed
+values is below average. 
+
+
+## Use and show R code to find all of the residuals of your model.
+
+
+```{r}
+model_xy <- lm(Y~X, data = x_y_data)
+residual_model <- resid(model_xy)
+residual_model
+```
+## Use and show R code to produce the residual plot. (Residuals versus Fitted Values)  Does the Residual Plot suggest a good linear fit for your model? Explain why or why not.
+
+```{r}
+model_xy <- lm(Y~X, data = x_y_data)
+residual_model <- resid(model_xy)
+residual_model
+plot(fitted(model_xy), residual_model)
+```
+The residual plot does suggest a linear relationship between X and Y because the residuals “bounce randomly” around the 0 line with no distinct pattern shown.
+
+## Use and show R code that produces a boxplot of your residuals.  Does your boxplot indicate the existence of outliers.
+
+```{r}
+boxplot(residual_model)
+```
+The boxplot does not suggest the existence of an outlier in the data. There is 
+no outlier that stands out from the basic pattern of residuals.
+
+## Use and show R code to determine the normality status of your residuals.
+
+```{r}
+qqnorm(residual_model)
+```
+The residuals are normally distributed as the data appears to roughly be a straight line.
+
+## Find the value that estimates the variance of the population linear model. (Use may use R)
+
+```{r}
+pp <- x_y_data
+anova(lm(pp$Y ~ pp$X))
+
+```
+The estimated variance of the population linear model is 16.49
+
+
+## Execute an F test in order to determine if a linear model is appropriate.Use the steps and procedure illustrated in class by making use of an ANOVA table, the F value, and the F critical number. And of course, indicate if the null hypothesis should be rejected.
+
+```{r}
+pp_f <- lm(Y~X, data = x_y_data)
+anova(pp_f)
+
+qf(p=.05, df1=1, df2=10, lower.tail=FALSE)
+
+```
+The F value of 49.956 is greater than the F critical value of 4.964603. We will
+reject the null hypothesis that B1 = 0. This means that a linear relationship
+does exist between the X and Y variables
+
+## Part 2: Dataset
+
+```{r}
+Scatter_xi_yi <- tribble(~Xi,  ~Yi,
+           0  ,                 98,
+           1  ,                135,
+           2  ,                162,
+           3  ,                178,
+           4  ,                221,
+           5  ,                232,
+           6  ,                283,
+           7  ,                300,
+           8  ,                374,
+           9  ,                395,
+    
+  ) 
+
+Scatter_xi_yi
+```
+
+## Prepare a scatter plot of the data. Does a linear relation appear to be appropriate.
+
+```{r}
+qplot(x = Xi, y = Yi, data = Scatter_xi_yi, geom = "point")
+
+
+```
+The scatter plot suggest that a linear relation does seem appropriate
+
+
+## Use the Box-Cox procedure to find an appropriate power transformation of Y. What transformation of Y is suggested? Be sure to show all work and R code as demonstrated in class.
+
+```{r}
+plot(Scatter_xi_yi$Yi ~ Scatter_xi_yi$Xi)
+
+model_old <- lm(Scatter_xi_yi$Yi ~ Scatter_xi_yi$Xi) 
+model_old
+
+box_cox  <- boxcox(Scatter_xi_yi$Yi ~ Scatter_xi_yi$Xi) 
+box_cox
+
+lambda <- box_cox$x[which.max(box_cox$y)] 
+lambda
+
+
+new_model <- lm(((Scatter_xi_yi$Yi^lambda-1)/lambda) ~ Scatter_xi_yi$Xi) 
+new_model
+
+
+# old model
+ 
+qqnorm(model_old$residuals) 
+qqline(model_old$residuals) 
+
+
+# new model
+
+qqnorm(new_model$residuals) 
+qqline(new_model$residuals) 
+
+```
+If in the Q-Q plot the data points fall in a straight line, the data  
+points are said to follow normality. The new model plot is alot more steep
+than old model.

@@ -1,0 +1,111 @@
+---
+title: 'Stat 415: Regression Classwork/Lab 7'
+author: "Frankie Tyndall"
+date: '2022-07-18'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1 Matrix
+```{r}
+
+X <- matrix(c(4,
+              1,
+              2,
+              3,
+              3,
+              4),ncol = 1, byrow = TRUE)
+
+X
+
+Y <- matrix(c(16,
+               5,
+              10,
+              15, 
+              13, 
+              22),ncol = 1, byrow = TRUE)
+Y
+
+```
+
+## Y'Y
+```{r}
+
+transposeY <- t(Y)
+transposeY%*%Y
+```
+## X'X
+
+```{r}
+
+transposeXs <- t(X)
+transposeXs%*%X
+```
+## X'Y
+
+```{r}
+
+transposeXs <- t(X)
+transposeXs%*%Y
+```
+## Problem 2 Matrix
+
+```{r}
+x <- matrix(c(1, 49,
+              1, 69,
+              1, 89,
+              1, 99,
+              1, 109),ncol = 2, byrow = TRUE)
+x
+
+y <- matrix(c(124,
+               95,
+               71,
+               45, 
+               18), ncol = 1, byrow = TRUE)
+y
+```
+## Linear Model's Intercept and Slope
+```{r}
+transposex <- t(x)
+transposex
+product1 <- transposex%*%x
+product1
+det(product1)
+solve(product1)
+int <- solve(product1)%*%transposex%*%y
+int
+```
+## residuals 
+```{r}
+residuals_xy <- y - x%*%int
+residuals_xy
+```
+## Fitted values
+
+```{r}
+fitted_vals <- x%*%int
+fitted_vals
+```
+
+## Problem 3: Inverse of transpose equals transpose of inverse
+
+```{r}
+A <-  matrix(c(3, 2, 7,
+              6, 0, -1,
+              6, 2,  5), ncol = 3, byrow = TRUE)
+A
+
+det(A) # Determinant does not equal 0
+
+transposeA <- t(A)
+inverseoftransposeA <- solve(transposeA)
+inverseoftransposeA
+
+inverseA <- solve(A)
+transposeofInverseA <- t(inverseA)
+transposeofInverseA
+```

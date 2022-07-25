@@ -1,0 +1,112 @@
+---
+title: 'Stat 415 Regression: Homework 2 (Residuals)'
+author: "Frankie Tyndall"
+date: '2022-07-09'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
+library(dplyr)
+MuscelMassData <- read_csv("C:/Users/frank/Downloads/MuscelMassData.csv")
+```
+
+## Study of Muscle Mass
+
+A person's muscle mass is expected to decrease with age. To explore this 
+relationship in women, a nutritionist randomly selected 15 women from each lO-year age group, beginning with age 40 and ending with age 79
+The results follow; X is age, and Y is a measure of muscle mass. 
+
+x = age 
+
+y = measure of muscle mass
+
+## Muscle Mass Dataset: Use and show R code to read in the Muscel Mass Data Excel File
+
+```{r}
+MuscelMassData
+```
+## Hypothesis for F-Test
+
+H0:β1=0 # null hypothesis: linear relationship does not exist
+HA:β1≠0 # alternative hypothesis: linear relationship does exist
+
+## Use and show R code to generate a scatter plot and comment on general trends that are evident involving the dependent variable and the independent variable.
+
+```{r}
+qplot(x = X, y = y, data = MuscelMassData, geom = "point")
+
+
+```
+Based on the scatter plot, the bivariate data with age and measure muscle mass
+has a strong negative correlation. This indicates that as age increases, the
+muscle mass of an individual decreases. Based on the scatterplot, it looks like
+one outlier is present. 
+
+## Use and show R code to produce a regression model.  Interpret the slope of your model.
+
+```{r}
+lm(y~X, data = MuscelMassData)
+
+
+```
+Slope = -0.6275 
+y intercept =  113.3524
+
+y(hat) = 113.3524 - 0.6275X
+
+The slope indicates that for every increase by 1 year in age (X),
+the measure of muscle mass was found to have decreased by -0.6275 years
+on average.
+
+## Use and show R code to produce all of the residuals
+
+```{r}
+model_muscle <- lm(y~X, data = MuscelMassData)
+residual_model <- resid(model_muscle)
+residual_model
+
+
+
+
+```
+## Use and show R code to produce a qqplot for the residuals. Interpret the qqplot by commenting on normality for the residuals.
+
+```{r}
+model_muscle <- lm(y~X, data = MuscelMassData)
+residual_model <- resid(model_muscle)
+residual_model
+
+qqnorm(residual_model)
+
+```
+The residuals are normally distributed as the data appears to roughly
+be a straight line.
+
+## Use and show R code to produce a graph/plot that will indicate the existence of any outliers for your residuals.
+
+```{r}
+model_muscle <- lm(y~X, data = MuscelMassData)
+residual_model <- resid(model_muscle)
+residual_model
+
+boxplot(residual_model)
+
+```
+Based on the boxplot there does suggest the existence of an outlier in the data. There is one outlier that stand out from the basic pattern of residuals.
+
+
+## Now use and show R code to produce a residual plot of residuals plotted against the fitted values.  Examine the residual plot and comment on the appropriateness of linearity. That is, explain why your residual plot does or does not suggest a linear relationship for the bivariate data.
+
+```{r}
+model_muscle <- lm(y~X, data = MuscelMassData)
+residual_model <- resid(model_muscle)
+residual_model
+
+plot(fitted(model_muscle), residual_model)
+```
+This residual plot does suggest a linear relationship between age and muscle
+mass because the residuals "bounce randomly" around the 0 line with no
+distinct pattern shown.

@@ -1,0 +1,119 @@
+---
+title: 'Stat 415 Regression: Classwork/Lab 8'
+author: "Frankie Tyndall"
+date: '2022-07-22'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Head Circumference Dataset 
+
+```{r}
+tribble(~HEIGHT,          ~WEIGHT,            ~HEADCIRCUMFERENCE,         
+        30,                  339,                   47,             
+     26.25,                  267,                   42,              
+        25,                  289,                   43,              
+        27,                  332,                 44.5,              
+      27.5,                  272,                   44,              
+      24.5,                  214,                 40.5,              
+     27.75,                  311,                   44,             
+        25,                  259,                 41.5,
+        28,                  298,                   46,              
+     27.25,                  288,                   44,
+        26,                  277,                   44,                   
+     27.25,                  292,                 44.5,
+        27,                  302,                 42.5,
+     28.25,                  336,                 44.5
+     ) -> Head_circum
+Head_circum
+```
+## Use and show R code to construct a coefficient matrix. Is there multicollinearity involving any of the explanatory variables?  If so, what variables are of concern? (Head Circumference is the response variable)
+
+```{r}
+cor(Head_circum)
+```
+The predictor variables, height and weight both have high correlations with the
+dependent/response variable of Height circumference. There is multicollinearity
+between the predictor variables Height and Weight. The correlation coefficient
+between the two variables is 0.7847652, this indicates that both of
+the variables may not be needed in the model. The predicting power of
+the model is not improved if there is high correlation between the height and 
+weight variables.
+
+## Use and show R code to produce the full multi regression model where the response variable is Head Circumference and the two explanatory variables are Height and Weight.
+
+```{r}
+ml_headcir <- lm(HEADCIRCUMFERENCE~HEIGHT + WEIGHT, Head_circum)
+ml_headcir
+
+```
+The full regression model:
+
+Head Circumference = 18.82425 + 0.78634*HEIGHT + 0.01281*WEIGHT
+
+## Use and show R code to produce the summary table for your full model.  Indicate the variable whose p value is not significant at the level of .05.  And also indicate what proportion of the variability in Head Circumference is explained by your model.
+
+```{r}
+
+summary(ml_headcir)
+
+```
+The weight variable has a p value that is larger than 0.05, specifically it has
+a p value of 0.29290, this makes the explanatory variable weight not 
+significant. Using the adjusted r-squared value of 0.743, this means that
+The model explains 74.3% of the variation in the dependent variable Head Circumference using only those predictor variables that have an impact on the
+response variable.
+
+## Use and show R code that will produce a linear regression model with the explanatory variable of no significance removed.
+
+```{r}
+removed_variable <- lm(HEADCIRCUMFERENCE~HEIGHT, Head_circum)
+removed_variable
+
+summary(removed_variable)
+```
+Linear Regression Model:
+
+y-hat = 16.382 + 1.016*Height
+
+## Interpret the slope of this model
+
+```{r}
+removed_variable
+```
+The slope indicates that for every increase by 1 inch in height,
+a child's head circumference (in centimeters) was found to have increased by
+1.016 on average.
+
+## What proportion of the variability of the response variable is not explained by the linear regression model? 
+
+1 -  0.7584 = 0.2416 or 24.16%
+
+24.16% of the variability of the response variable Head Circumference is not
+explained by the linear regression model.
+
+## Find the correlation coefficient r  for the linear model
+
+
+```{r}
+cor(Head_circum$HEADCIRCUMFERENCE, Head_circum$HEIGHT)
+```
+The correlation coefficiebt r for the linear model is 0.8708869
+
+## Does r suggest a linear relationship that is weak, moderate, strong, or very strong?
+
+The linear relationship is strong with a correlation coefficient of 0.8708869
+
+
+## What is the value of the standard error for the explanatory variable?  Explain what it means in two or sentences.
+
+```{r}
+summary(removed_variable)
+```
+
+The standard error of the explanatory variable is 0.1655, this means that
+0.1655 is the typical distance a sample height coefficient and the true population height coefficient.

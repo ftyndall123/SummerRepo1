@@ -1,0 +1,72 @@
+---
+title: 'Data 413: Classwork/Lab 3'
+author: "Frankie Tyndall"
+date: '2022-07-05'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## The three lists 
+
+```{r}
+
+x <- list(2, 4, 5, 9, 1)
+y <- list(8, 7, 2, 8, 3)
+z <- list(1, 8, 5, 4, 2)
+
+```
+
+## For the lists given above, show and use R code (a map function) to 
+## iteratively find the square of the sums across the vectors
+
+```{r}
+pmap_dbl(list(x,y,z), sum)^2
+
+```
+## The Tibble
+
+```{r}
+tribble( ~Student,  ~Gender,    ~Salary,
+                   "John",   "Male",       65000,
+                   "Alice",  "Female",    73000,
+                    "Juan",   "Male",       66000,
+                    "Beth",  "Female",    71500,
+                    "Denise", "Female",  82000
+) -> table
+ table
+```
+## Using the data table above, use and show R code that will output a statement that is descriptive for all rows of the data table.
+
+```{r}
+table %>%
+  pmap_chr(~ str_glue("{..1} who is {..2}, has a salary of {..3} dollars per year"))
+```
+## Write a nested loop that will produce a 5 by 5 matrix that whose matrix elements are sums of the corresponding columns and rows.
+
+```{r}
+matrix_kk <- matrix( nrow = 5, ncol = 5)
+for (m in 1:5) {
+  for (n in 1:5) {
+    matrix_kk[m, n]<- (m + n)
+  }
+}
+print(matrix_kk)
+
+```
+## Use for loop coding to produce the number sequence shown below: Note that the numbers 5 and 10 are missing
+
+```{r}
+x <- 1:20
+for (val in x){
+  if (val == 5)
+    next
+  if (val == 10)
+    next
+  print(val)
+}
+
+```

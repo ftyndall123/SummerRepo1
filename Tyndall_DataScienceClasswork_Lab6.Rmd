@@ -1,0 +1,98 @@
+---
+title: 'DATA 413: Classwork/Lab 6'
+author: "Frankie Tyndall"
+date: '2022-07-19'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(data.table)
+flight3 <- fread("nycdata.csv")
+flight4 <- read_csv("nycdata.csv")
+
+```
+
+
+## Dataset by data.table
+```{r}
+flight3
+
+```
+
+## Dataset by Tidyverse
+
+You can also embed plots, for example:
+
+```{r}
+flight4
+```
+## Use and show data.table code to select the variables year, month, day, and hour from the imported flights data
+
+```{r}
+variables_ymd <- flight3[, .(year, month, day, hour)]
+variables_ymd
+
+```
+## Use and show data. table code to produce a table that shows a carrier of DL, an origin of JFK and a destination of SEA
+
+```{r}
+carrier_fl <- flight3[origin == "JFK" & dest == "SEA" & carrier == "DL"]
+carrier_fl
+
+```
+
+## Use and show data.table code to produce a table that shows a carrier of UA, a month of March, and an airtime that is below 330.
+
+```{r}
+
+airtime_330 <- flight3[carrier == "UA" & month == 3 & air_time < 330]
+airtime_330
+
+
+```
+##  Use and show tidyverse code to produce a table that shows a carrier of UA, a month of March, and an airtime that is below 330.
+
+```{r}
+airtime_fl <- flight4 %>%
+  filter(carrier == "UA", month == 3, air_time < 330)
+airtime_fl
+```
+## Use the data.table method to add a variable called speed that is the average air speed of the plane in miles per hour. 
+
+```{r}
+flight3
+sp <- flight3[, c("speed") := .(distance/(air_time/60))]
+sp
+```
+
+## Use the tidyverse method to add a variable called speed that is the average air speed of the plane in miles per hour.
+
+```{r}
+perhour_tideverse <- flight4 %>%
+  mutate(speed = (distance/(air_time/60)))
+perhour_tideverse
+```
+
+## Show and use coding to change the carrier abbreviation of UA to UniitedAir
+
+```{r}
+# data.table method
+flight3
+ua <- flight3[carrier == "UA", carrier := "UniitedAir"]
+ua[carrier == "UniitedAir"]
+```
+
+## Show and use coding to change the carrier abbreviation of UA to UniitedAir
+
+```{r}
+
+# tidyverse method 
+
+changeUA <- flight4 %>%
+  mutate(carrier = recode(carrier, "UA" = "UniitedAir")) %>%
+  filter(carrier == "UniitedAir")
+changeUA
+```

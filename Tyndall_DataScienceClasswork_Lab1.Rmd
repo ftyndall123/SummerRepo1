@@ -1,0 +1,61 @@
+---
+title: "Data 413: Classwork/Lab 1"
+author: "Frankie Tyndall"
+date: '2022-06-28'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+```
+
+## In three or four sentences, explain why constructing a Function in order to execute tasks, is beneficial or advantageous
+
+   Constructing a function in order to execute tasks is beneficial/advantageous
+   because it helps you to decrease the amount of input or computational errors
+   that you would have in your code due to repetitive calculations. 
+   Functions help you to reuse your code for different inputs, 
+   which helps you to properly organize and simplify your code making 
+   it easier to follow. Finally, functions allows you to solve complex
+   problems to simpler code. 
+   
+# Write a function (using r code and structure demonstrated in class) to calculate a z score for a given observed value, a mean, and a standard deviation value. And then use your function to find a z score for the following problem. 
+
+Observed value = 25.77,  mean =  23.54,  standard deviation = 2.442
+
+```{r}
+z_score <- function(ob, mean, sd){
+  (ob - mean)/sd
+}
+
+print(paste("The z score is", z_score(25.77, 23.54, 2.442)))
+```
+
+## Write a function (using r code and the structure demonstrated in class) to calculate the natural log of a number multiplied by the common log of the same number divided by the cube root of a given prime number.Use your function to find the answer if the number to be used for both log expressions is 32 and the given prime number is 11.
+
+## Also use R code to round your answer to the nearest tenth
+
+
+```{r}
+natural_Common <- function(num, prime){
+  V = ((log(num)*log10(num))/(prime^(1/3)))
+  return(round(V, digits = 1))
+}
+
+natural_Common(32, 11)
+```
+
+#Use and show R coding to calculate the standard deviation for each variable of the data table mtcars using the “Special For Loop Method” demonstrated in the class notes
+
+```{r}
+mtcars
+
+sd_mtcars <- vector("double", ncol(mtcars))  # 1. output
+ for (i in seq_along(mtcars)) {            # 2. sequence
+   sd_mtcars[[i]] <- sd(mtcars[[i]])      # 3. body
+ }
+
+sd_mtcars
+```

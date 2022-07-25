@@ -1,0 +1,106 @@
+---
+title: "Tutorial of Plotly Package Using S&P 500 Constituents Financial Dataset"
+author: "Frankie Tyndall"
+date: '2022-04-28'
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(dplyr)
+library(plotly)
+library(readr)
+constituents_financials <- read_csv("C:/Users/frank/Desktop/Datasets/constituents-financials.csv")
+```
+
+## Description of Plotly Package
+
+-   Plotly is a package/library that allows you to create interactive, publication-quality graphs.
+
+-   Basic charts, Statistical charts, Scientific charts, Financial charts, Maps, 3D charts, Subplots, Transforms, and Animations are some of the charts you can create.
+
+-   main function of plotly is to create interactive web graphics via the open source JavaScript graphing library plotly.js.
+
+-   Ploty is a great package as it can be used with or without ggplot2. If ggplot2 is used, ggplotly() converts static plots to an interactive web-based version.
+
+-   When using ploty without ggplot2, the function plot_ly() provides more direct interface to plotly.js, which allows for more specialized chart type usage such as parallel coordinates or maps.
+
+-   Ploty even supports visualizations that the ggplot2 API will never support such as surface, mesh, and trisurf.
+
+## Description of constituents_finanicals Dataset
+
+-   This constituents_finanicals dataset contains the 505 companies apart of the S\$P 500 in 2013 from different sectors of society.
+
+-   The S&P 500 Index, also known as the Standard & Poor's 500 Index, is a market capitalization-weighted index of 500 of the largest publicly traded companies in the United States.
+
+-   As shown in this dataset, It is not an exact list of the top 500 U.S. companies by market capitalization because the index includes other criteria.
+
+-   Because of its depth and diversity, the S&P 500 is widely considered one of the best gauges of large U.S. stocks, and even the entire equities market.
+
+## Visualization of Constituents Financials Dataset
+
+```{r}
+constituents_financials
+```
+
+## Application 1 of Plotly Package: Proportion of S\$P 500 companies in Each Sector
+
+```{r}
+constituents_financials_sector <- constituents_financials %>% arrange(Sector)
+Pie_Data <- count(constituents_financials_sector, Sector)
+
+plot_ly(Pie_Data, values = ~n, labels = ~ factor(Sector), type = "pie")
+```
+
+## Finding The Top 3 Dividend Yielding S&P 500 companies
+
+-   What is dividend yielding?
+
+-   Dividend Yield is a financial ratio that indicates the percentage of a company's share price paid out in dividends each year.
+
+```{r}
+constituents_financials_Top3 <- constituents_financials %>% arrange(desc(`Dividend Yield`))
+head(constituents_financials_Top3, 3)
+
+```
+
+## Application 2 of Ploty Package: Visualization of The Top 3 Dividend Yeilding S&P 500 companies
+
+```{r}
+fig_top3 <- plot_ly(
+  type = "funnel",
+  name = "CenturyLink Inc",
+  y = c("Dividend Yield", "Price", "Earnings per share"),
+  x = c(12.661196, 16.20, 1.16),
+  textinfo = "value"
+)
+
+fig_top3 <- fig_top3 %>%
+  add_trace(
+    type = "funnel",
+    name = "Kimco Realty",
+    orientation = "h",
+    y = c("Dividend Yield", "Price", "Earnings per share"),
+    x = c(7.713499, 14.01, 0.80),
+    textposition = "inside",
+    textinfo = "value"
+  )
+
+fig_top3 <- fig_top3 %>%
+  add_trace(
+    type = "funnel",
+    name = "Iron Mountain Incorporated",
+    orientation = "h",
+    y = c("Dividend Yield", "Price", "Earnings per share"),
+    x = c(7.082580, 32.07, 0.46),
+    textposition = "outside",
+    textinfo = "value"
+  )
+
+fig_top3 <- fig_top3 %>%
+  layout(yaxis = list(categoryarray = c("Dividend Yield", "Price", "Earnings per share")))
+
+
+fig_top3
+```

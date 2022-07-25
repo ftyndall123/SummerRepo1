@@ -1,0 +1,32 @@
+# 1a Show and use a census API key that gives you access to the Census Bureau data. Do not use my API key, use and show your own key.
+
+library(tidycensus)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+
+census_api_key("2153faf1e1d25707ef71c8c464cb4c2c08be4e76")
+install = TRUE
+
+
+## 1b Using the link provided in your notes, secure a Census Bureau API key. Run the census code  that requires usage of the API key and then use R coding to produce a table that shows the totals for Asian Males for ages 67 to 69 by state for the year 2000. The identifier code is P012D021
+
+
+
+totalasianmen <- get_decennial(geography = "state", 
+                       variables = "P012D021", 
+                       year = 2000)
+totalasianmen
+
+
+
+# 1c Show and use R code to find the mean, median, ,max, min, Q1, and Q3 for the median ages.
+
+summary(totalasianmen$value)
+
+
+# Show and use R code (tidyverse/dplyr) coding to find the top ten states with highest populations of Asian Males whose ages are between 67 and 69.
+
+select_high <- totalasianmen[, c("NAME", " value")]
+select_high
+
